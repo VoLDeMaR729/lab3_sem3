@@ -1,0 +1,392 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - tree/tree.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">tree</a> - tree.cpp<span style="font-size: 80%;"> (source / <a href="tree.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">98.7&nbsp;%</td>
+            <td class="headerCovTableEntry">223</td>
+            <td class="headerCovTableEntry">220</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-01-17 14:54:11</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntry">18</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #include &lt;iostream&gt;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &lt;fstream&gt;</span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &quot;tree.h&quot;</span>
+<span id="L4"><span class="lineNum">       4</span>              : </span>
+<span id="L5"><span class="lineNum">       5</span>              : using namespace std;</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : //инициализация nil узла</span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC tlaBgGNC">           4 : void RBTree::initializeTNULL() {</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">           4 :     TNULL = new NodeT(0);//создаем</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">           4 :     TNULL-&gt;color = BLACK;//всегда черный</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           4 :     TNULL-&gt;left = nullptr;//нет детей</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">           4 :     TNULL-&gt;right = nullptr;//нет детей</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           4 : }</span></span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : //конструктор</span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           4 : RBTree::RBTree() {</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           4 :     initializeTNULL();//созд заглушку</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           4 :     root = TNULL;//корень это заглушка</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           4 : }</span></span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span>              : //рекурсивное удаление</span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          11 : void RBTree::deleteTree(NodeT* node) {</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          11 :     if (node != TNULL) {//если не заглушка</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           3 :         deleteTree(node-&gt;left);//лево</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           3 :         deleteTree(node-&gt;right);//право</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           3 :         delete node;</span></span>
+<span id="L27"><span class="lineNum">      27</span>              :     }</span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          11 : }</span></span>
+<span id="L29"><span class="lineNum">      29</span>              : </span>
+<span id="L30"><span class="lineNum">      30</span>              : //деструктор</span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           4 : RBTree::~RBTree() {</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">           4 :     deleteTree(root);//чистим дерево</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           4 :     delete TNULL;//чистим заглушку</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           4 : }</span></span>
+<span id="L35"><span class="lineNum">      35</span>              : </span>
+<span id="L36"><span class="lineNum">      36</span>              : //левый поворот</span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         263 : void RBTree::leftRotate(NodeT* x) {</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         263 :     NodeT* y = x-&gt;right;//правый сын</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">         263 :     x-&gt;right = y-&gt;left;//перекидываем</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">         263 :     if (y-&gt;left != TNULL) y-&gt;left-&gt;parent = x;//обновляем родителя</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         263 :     y-&gt;parent = x-&gt;parent;//связываем с дедом</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">         263 :     if (x-&gt;parent == nullptr) root = y;//если корень</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">         260 :     else if (x == x-&gt;parent-&gt;left) x-&gt;parent-&gt;left = y;//левый</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          82 :     else x-&gt;parent-&gt;right = y;//правый</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">         263 :     y-&gt;left = x;//ставим x слева</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         263 :     x-&gt;parent = y;//обновляем родителя</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         263 : }</span></span>
+<span id="L48"><span class="lineNum">      48</span>              : </span>
+<span id="L49"><span class="lineNum">      49</span>              : //правый поворот</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">         247 : void RBTree::rightRotate(NodeT* x) {</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         247 :     NodeT* y = x-&gt;left;//левый сын</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         247 :     x-&gt;left = y-&gt;right;//перекидываем</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         247 :     if (y-&gt;right != TNULL) y-&gt;right-&gt;parent = x;//обновляем</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">         247 :     y-&gt;parent = x-&gt;parent;//связываем</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">         247 :     if (x-&gt;parent == nullptr) root = y;//корень</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">         243 :     else if (x == x-&gt;parent-&gt;right) x-&gt;parent-&gt;right = y;//правый</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          84 :     else x-&gt;parent-&gt;left = y;//левый</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         247 :     y-&gt;right = x;//ставим x справа</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">         247 :     x-&gt;parent = y;//обновляем</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         247 : }</span></span>
+<span id="L61"><span class="lineNum">      61</span>              : </span>
+<span id="L62"><span class="lineNum">      62</span>              : //балансировка вставки</span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">         498 : void RBTree::insertFix(NodeT* k) {</span></span>
+<span id="L64"><span class="lineNum">      64</span>              :     NodeT* u;//дядя</span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">         933 :     while (k-&gt;parent-&gt;color == RED) {//пока папа красный</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">         440 :         if (k-&gt;parent == k-&gt;parent-&gt;parent-&gt;right) {//папа справа</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">         212 :             u = k-&gt;parent-&gt;parent-&gt;left;//дядя слева</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">         212 :             if (u-&gt;color == RED) {//случай 1</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">         116 :                 u-&gt;color = BLACK;//красим</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">         116 :                 k-&gt;parent-&gt;color = BLACK;//красим</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">         116 :                 k-&gt;parent-&gt;parent-&gt;color = RED;//дед красный</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         116 :                 k = k-&gt;parent-&gt;parent;//идем вверх</span></span>
+<span id="L73"><span class="lineNum">      73</span>              :             } else {</span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">          96 :                 if (k == k-&gt;parent-&gt;left) {//случай 2</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          53 :                     k = k-&gt;parent;//вверх</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">          53 :                     rightRotate(k);//поворот</span></span>
+<span id="L77"><span class="lineNum">      77</span>              :                 }</span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">          96 :                 k-&gt;parent-&gt;color = BLACK;//случай 3</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          96 :                 k-&gt;parent-&gt;parent-&gt;color = RED;//дед красный</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          96 :                 leftRotate(k-&gt;parent-&gt;parent);//поворот</span></span>
+<span id="L81"><span class="lineNum">      81</span>              :             }</span>
+<span id="L82"><span class="lineNum">      82</span>              :         } else {//зеркальная ситуация</span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         228 :             u = k-&gt;parent-&gt;parent-&gt;right;//дядя справа</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">         228 :             if (u-&gt;color == RED) {//случай 1</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">         132 :                 u-&gt;color = BLACK;//красим</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">         132 :                 k-&gt;parent-&gt;color = BLACK;//красим</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">         132 :                 k-&gt;parent-&gt;parent-&gt;color = RED;//дед красный</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">         132 :                 k = k-&gt;parent-&gt;parent;//вверх</span></span>
+<span id="L89"><span class="lineNum">      89</span>              :             } else {</span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">          96 :                 if (k == k-&gt;parent-&gt;right) {//случай 2</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          54 :                     k = k-&gt;parent;//вверх</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">          54 :                     leftRotate(k);//поворот</span></span>
+<span id="L93"><span class="lineNum">      93</span>              :                 }</span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">          96 :                 k-&gt;parent-&gt;color = BLACK;//случай 3</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">          96 :                 k-&gt;parent-&gt;parent-&gt;color = RED;//дед красный</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">          96 :                 rightRotate(k-&gt;parent-&gt;parent);//поворот</span></span>
+<span id="L97"><span class="lineNum">      97</span>              :             }</span>
+<span id="L98"><span class="lineNum">      98</span>              :         }</span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">         440 :         if (k == root) break;//если дошли до корня</span></span>
+<span id="L100"><span class="lineNum">     100</span>              :     }</span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">         498 :     root-&gt;color = BLACK;//корень всегда черный</span></span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">         498 : }</span></span>
+<span id="L103"><span class="lineNum">     103</span>              : </span>
+<span id="L104"><span class="lineNum">     104</span>              : //вставка</span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">         505 : void RBTree::insert(int key) {</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">         505 :     NodeT* node = new NodeT(key);//создаем</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">         505 :     node-&gt;parent = nullptr;//нет родителя</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">         505 :     node-&gt;data = key;//данные</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">         505 :     node-&gt;left = TNULL;//заглушка</span></span>
+<span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">         505 :     node-&gt;right = TNULL;//заглушка</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">         505 :     node-&gt;color = RED;//новый красный</span></span>
+<span id="L112"><span class="lineNum">     112</span>              : </span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">         505 :     NodeT* y = nullptr;//будущий родитель</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">         505 :     NodeT* x = root;//текущий</span></span>
+<span id="L115"><span class="lineNum">     115</span>              : </span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">        4348 :     while (x != TNULL) {//спуск вниз</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">        3843 :         y = x;//сохраняем</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">        3843 :         if (node-&gt;data &lt; x-&gt;data) x = x-&gt;left;//лево</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">        1867 :         else x = x-&gt;right;//право</span></span>
+<span id="L120"><span class="lineNum">     120</span>              :     }</span>
+<span id="L121"><span class="lineNum">     121</span>              : </span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">         505 :     node-&gt;parent = y;//ставим родителя</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">         505 :     if (y == nullptr) root = node;//если дерево пустое</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">         501 :     else if (node-&gt;data &lt; y-&gt;data) y-&gt;left = node;//левый сын</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         247 :     else y-&gt;right = node;//правый сын</span></span>
+<span id="L126"><span class="lineNum">     126</span>              : </span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">         505 :     if (node-&gt;parent == nullptr) {//корень</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">           4 :         node-&gt;color = BLACK;//черный</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">           4 :         return;</span></span>
+<span id="L130"><span class="lineNum">     130</span>              :     }</span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">         501 :     if (node-&gt;parent-&gt;parent == nullptr) return;//нет деда</span></span>
+<span id="L132"><span class="lineNum">     132</span>              : </span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         498 :     insertFix(node);//балансировка</span></span>
+<span id="L134"><span class="lineNum">     134</span>              : }</span>
+<span id="L135"><span class="lineNum">     135</span>              : </span>
+<span id="L136"><span class="lineNum">     136</span>              : //трансплантация (замена поддерева)</span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         660 : void RBTree::rbTransplant(NodeT* u, NodeT* v) {</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">         660 :     if (u-&gt;parent == nullptr) root = v;//корень</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">         650 :     else if (u == u-&gt;parent-&gt;left) u-&gt;parent-&gt;left = v;//левый</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">         256 :     else u-&gt;parent-&gt;right = v;//правый</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">         660 :     v-&gt;parent = u-&gt;parent;//родитель</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">         660 : }</span></span>
+<span id="L143"><span class="lineNum">     143</span>              : </span>
+<span id="L144"><span class="lineNum">     144</span>              : //поиск минимума</span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">         239 : NodeT* RBTree::minimum(NodeT* node) {</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">         569 :     while (node-&gt;left != TNULL) node = node-&gt;left;//до упора влево</span></span>
+<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">         239 :     return node;</span></span>
+<span id="L148"><span class="lineNum">     148</span>              : }</span>
+<span id="L149"><span class="lineNum">     149</span>              : </span>
+<span id="L150"><span class="lineNum">     150</span>              : //балансировка удаления</span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">         350 : void RBTree::deleteFix(NodeT* x) {</span></span>
+<span id="L152"><span class="lineNum">     152</span>              :     NodeT* s;//брат</span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">         713 :     while (x != root &amp;&amp; x-&gt;color == BLACK) {//пока черный</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">         363 :         if (x == x-&gt;parent-&gt;left) {//слева</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">         185 :             s = x-&gt;parent-&gt;right;//брат справа</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">         185 :             if (s-&gt;color == RED) {//случай 1</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">          16 :                 s-&gt;color = BLACK;//красим</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">          16 :                 x-&gt;parent-&gt;color = RED;//красим</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">          16 :                 leftRotate(x-&gt;parent);//поворот</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">          16 :                 s = x-&gt;parent-&gt;right;//обновляем брата</span></span>
+<span id="L161"><span class="lineNum">     161</span>              :             }</span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">         185 :             if (s-&gt;left-&gt;color == BLACK &amp;&amp; s-&gt;right-&gt;color == BLACK) {//случай 2</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">         124 :                 s-&gt;color = RED;//красим</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">         124 :                 x = x-&gt;parent;//вверх</span></span>
+<span id="L165"><span class="lineNum">     165</span>              :             } else {</span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">          61 :                 if (s-&gt;right-&gt;color == BLACK) {//случай 3</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">          28 :                     s-&gt;left-&gt;color = BLACK;//красим</span></span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">          28 :                     s-&gt;color = RED;//красим</span></span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">          28 :                     rightRotate(s);//поворот</span></span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">          28 :                     s = x-&gt;parent-&gt;right;//обновляем</span></span>
+<span id="L171"><span class="lineNum">     171</span>              :                 }</span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">          61 :                 s-&gt;color = x-&gt;parent-&gt;color;//случай 4</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">          61 :                 x-&gt;parent-&gt;color = BLACK;//красим</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">          61 :                 s-&gt;right-&gt;color = BLACK;//красим</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">          61 :                 leftRotate(x-&gt;parent);//поворот</span></span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">          61 :                 x = root;//выход</span></span>
+<span id="L177"><span class="lineNum">     177</span>              :             }</span>
+<span id="L178"><span class="lineNum">     178</span>              :         } else {//зеркально</span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">         178 :             s = x-&gt;parent-&gt;left;//брат слева</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">         178 :             if (s-&gt;color == RED) {//случай 1</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">          16 :                 s-&gt;color = BLACK;//красим</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">          16 :                 x-&gt;parent-&gt;color = RED;//красим</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">          16 :                 rightRotate(x-&gt;parent);//поворот</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">          16 :                 s = x-&gt;parent-&gt;left;//обновляем</span></span>
+<span id="L185"><span class="lineNum">     185</span>              :             }</span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">         178 :             if (s-&gt;right-&gt;color == BLACK &amp;&amp; s-&gt;left-&gt;color == BLACK) {//случай 2</span></span>
+<span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">         124 :                 s-&gt;color = RED;//красим</span></span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">         124 :                 x = x-&gt;parent;//вверх</span></span>
+<span id="L189"><span class="lineNum">     189</span>              :             } else {</span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">          54 :                 if (s-&gt;left-&gt;color == BLACK) {//случай 3</span></span>
+<span id="L191"><span class="lineNum">     191</span> <span class="tlaGNC">          36 :                     s-&gt;right-&gt;color = BLACK;//красим</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">          36 :                     s-&gt;color = RED;//красим</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">          36 :                     leftRotate(s);//поворот</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">          36 :                     s = x-&gt;parent-&gt;left;//обновляем</span></span>
+<span id="L195"><span class="lineNum">     195</span>              :                 }</span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">          54 :                 s-&gt;color = x-&gt;parent-&gt;color;//случай 4</span></span>
+<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">          54 :                 x-&gt;parent-&gt;color = BLACK;//красим</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">          54 :                 s-&gt;left-&gt;color = BLACK;//красим</span></span>
+<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">          54 :                 rightRotate(x-&gt;parent);//поворот</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">          54 :                 x = root;//выход</span></span>
+<span id="L201"><span class="lineNum">     201</span>              :             }</span>
+<span id="L202"><span class="lineNum">     202</span>              :         }</span>
+<span id="L203"><span class="lineNum">     203</span>              :     }</span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">         350 :     x-&gt;color = BLACK;//красим в черный</span></span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">         350 : }</span></span>
+<span id="L206"><span class="lineNum">     206</span>              : </span>
+<span id="L207"><span class="lineNum">     207</span>              : //удаление</span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">         503 : void RBTree::remove(int key) {</span></span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">         503 :     NodeT* z = TNULL;//узел для удаления</span></span>
+<span id="L210"><span class="lineNum">     210</span>              :     NodeT *x, *y;//временные</span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">         503 :     NodeT* node = root;//поиск</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">        4346 :     while (node != TNULL) {</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">        3843 :         if (node-&gt;data == key) z = node;//нашли</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">        3843 :         if (node-&gt;data &lt;= key) node = node-&gt;right;//право</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">        2000 :         else node = node-&gt;left;//лево</span></span>
+<span id="L216"><span class="lineNum">     216</span>              :     }</span>
+<span id="L217"><span class="lineNum">     217</span>              : </span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">         503 :     if (z == TNULL) return;//не нашли</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">         502 :     y = z;//сохраняем</span></span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">         502 :     Color y_original_color = y-&gt;color;//цвет</span></span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">         502 :     if (z-&gt;left == TNULL) {//нет левого</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">         228 :         x = z-&gt;right;//правый</span></span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">         228 :         rbTransplant(z, z-&gt;right);//заменяем</span></span>
+<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">         274 :     } else if (z-&gt;right == TNULL) {//нет правого</span></span>
+<span id="L225"><span class="lineNum">     225</span> <span class="tlaGNC">          35 :         x = z-&gt;left;//левый</span></span>
+<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">          35 :         rbTransplant(z, z-&gt;left);//заменяем</span></span>
+<span id="L227"><span class="lineNum">     227</span>              :     } else {//два ребенка</span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">         239 :         y = minimum(z-&gt;right);//ищем замену</span></span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">         239 :         y_original_color = y-&gt;color;//цвет</span></span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">         239 :         x = y-&gt;right;//правый сына замены</span></span>
+<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">         239 :         if (y-&gt;parent == z) x-&gt;parent = y;//если близко</span></span>
+<span id="L232"><span class="lineNum">     232</span>              :         else {</span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">         158 :             rbTransplant(y, y-&gt;right);//перенос</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">         158 :             y-&gt;right = z-&gt;right;//связь</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">         158 :             y-&gt;right-&gt;parent = y;//родитель</span></span>
+<span id="L236"><span class="lineNum">     236</span>              :         }</span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">         239 :         rbTransplant(z, y);//перенос</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">         239 :         y-&gt;left = z-&gt;left;//связь</span></span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">         239 :         y-&gt;left-&gt;parent = y;//родитель</span></span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">         239 :         y-&gt;color = z-&gt;color;//красим</span></span>
+<span id="L241"><span class="lineNum">     241</span>              :     }</span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         502 :     delete z;//удаляем из памяти</span></span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">         502 :     if (y_original_color == BLACK) deleteFix(x);//баланс</span></span>
+<span id="L244"><span class="lineNum">     244</span>              : }</span>
+<span id="L245"><span class="lineNum">     245</span>              : </span>
+<span id="L246"><span class="lineNum">     246</span>              : //поиск (публичный)</span>
+<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">           3 : bool RBTree::search(int key) {</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">           3 :     NodeT* curr = root;//корень</span></span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">           5 :     while (curr != TNULL) {</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">           4 :         if (curr-&gt;data == key) return true;//нашли</span></span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">           2 :         if (key &lt; curr-&gt;data) curr = curr-&gt;left;//лево</span></span>
+<span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">           2 :         else curr = curr-&gt;right;//право</span></span>
+<span id="L253"><span class="lineNum">     253</span>              :     }</span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">           1 :     return false;//не нашли</span></span>
+<span id="L255"><span class="lineNum">     255</span>              : }</span>
+<span id="L256"><span class="lineNum">     256</span>              : </span>
+<span id="L257"><span class="lineNum">     257</span>              : //помощник печати</span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">           3 : void RBTree::printHelper(NodeT* root, string indent, bool last) const {</span></span>
+<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">           3 :     if (root != TNULL) {//если не пустой</span></span>
+<span id="L260"><span class="lineNum">     260</span> <span class="tlaGNC">           1 :         cout &lt;&lt; indent;//отступ</span></span>
+<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">           1 :         if (last) {</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">           1 :             cout &lt;&lt; &quot;R----&quot;;//правый</span></span>
+<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">           1 :             indent += &quot;   &quot;;</span></span>
+<span id="L264"><span class="lineNum">     264</span>              :         } else {</span>
+<span id="L265"><span class="lineNum">     265</span> <span class="tlaUNC tlaBgUNC">           0 :             cout &lt;&lt; &quot;L----&quot;;//левый</span></span>
+<span id="L266"><span class="lineNum">     266</span> <span class="tlaUNC">           0 :             indent += &quot;|  &quot;;</span></span>
+<span id="L267"><span class="lineNum">     267</span>              :         }</span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC tlaBgGNC">           1 :         string sColor = (root-&gt;color == RED) ? &quot;RED&quot; : &quot;BLK&quot;;//строка цвета</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">           1 :         cout &lt;&lt; root-&gt;data &lt;&lt; &quot;(&quot; &lt;&lt; sColor &lt;&lt; &quot;)&quot; &lt;&lt; endl;//вывод</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">           1 :         printHelper(root-&gt;left, indent, false);//левый рек</span></span>
+<span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">           1 :         printHelper(root-&gt;right, indent, true);//правый рек</span></span>
+<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">           1 :     }</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L274"><span class="lineNum">     274</span>              : </span>
+<span id="L275"><span class="lineNum">     275</span>              : //печать</span>
+<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">           1 : void RBTree::print() const {</span></span>
+<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">           3 :     if (root != TNULL) printHelper(root, &quot;&quot;, true);//запуск</span></span>
+<span id="L278"><span class="lineNum">     278</span> <span class="tlaUNC tlaBgUNC">           0 :     else cout &lt;&lt; &quot;Tree is empty&quot; &lt;&lt; endl;//пусто</span></span>
+<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC tlaBgGNC">           1 : }</span></span>
+<span id="L280"><span class="lineNum">     280</span>              : </span>
+<span id="L281"><span class="lineNum">     281</span>              : //помощник сохранения (PreOrder)</span>
+<span id="L282"><span class="lineNum">     282</span> <span class="tlaGNC">           3 : void RBTree::preOrderHelper(NodeT* node, ofstream&amp; file) const {</span></span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">           3 :     if (node != TNULL) {//если есть</span></span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC">           1 :         file.write((char*)&amp;node-&gt;data, sizeof(int));//пишем ключ</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">           1 :         preOrderHelper(node-&gt;left, file);//лево</span></span>
+<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">           1 :         preOrderHelper(node-&gt;right, file);//право</span></span>
+<span id="L287"><span class="lineNum">     287</span>              :     }</span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L289"><span class="lineNum">     289</span>              : </span>
+<span id="L290"><span class="lineNum">     290</span>              : //сохранение</span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           1 : bool RBTree::serialize(const string&amp; filename) const {</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">           1 :     ofstream file(filename, ios::binary);//открываем</span></span>
+<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">           1 :     if (!file.is_open()) return false;//ошибка</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">           1 :     preOrderHelper(root, file);//запуск обхода</span></span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">           1 :     file.close();</span></span>
+<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">           1 :     return true;</span></span>
+<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L298"><span class="lineNum">     298</span>              : </span>
+<span id="L299"><span class="lineNum">     299</span>              : //загрузка</span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">           1 : bool RBTree::deserialize(const string&amp; filename) {</span></span>
+<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">           1 :     ifstream file(filename, ios::binary);//открываем</span></span>
+<span id="L302"><span class="lineNum">     302</span> <span class="tlaGNC">           1 :     if (!file.is_open()) return false;//ошибка</span></span>
+<span id="L303"><span class="lineNum">     303</span>              :     </span>
+<span id="L304"><span class="lineNum">     304</span>              :     //очистка текущего</span>
+<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">           1 :     deleteTree(root);</span></span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">           1 :     root = TNULL;</span></span>
+<span id="L307"><span class="lineNum">     307</span>              : </span>
+<span id="L308"><span class="lineNum">     308</span>              :     //читаем пока есть данные</span>
+<span id="L309"><span class="lineNum">     309</span>              :     int val;</span>
+<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">           2 :     while (file.read((char*)&amp;val, sizeof(int))) {</span></span>
+<span id="L311"><span class="lineNum">     311</span> <span class="tlaGNC">           1 :         insert(val);//вставляем</span></span>
+<span id="L312"><span class="lineNum">     312</span>              :     }</span>
+<span id="L313"><span class="lineNum">     313</span>              :     </span>
+<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">           1 :     file.close();</span></span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">           1 :     return true;</span></span>
+<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">           1 : }</span></span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
