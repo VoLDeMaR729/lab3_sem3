@@ -1,0 +1,1186 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>structs: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">lab3_go/internal/structs/array.go (96.2%)</option>
+				
+				<option value="file1">lab3_go/internal/structs/dlist.go (88.7%)</option>
+				
+				<option value="file2">lab3_go/internal/structs/hash.go (95.7%)</option>
+				
+				<option value="file3">lab3_go/internal/structs/queue.go (94.4%)</option>
+				
+				<option value="file4">lab3_go/internal/structs/slist.go (87.9%)</option>
+				
+				<option value="file5">lab3_go/internal/structs/stack.go (90.9%)</option>
+				
+				<option value="file6">lab3_go/internal/structs/tree.go (98.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package structs
+
+import (
+ "encoding/json"
+ "errors"
+ "fmt"
+ "os"
+)
+
+// Massive
+type Massive struct {
+ Data     []string
+ Size     int
+ Capacity int
+}
+
+// Конструктор
+func NewMassive(initialCapacity int) *Massive <span class="cov8" title="1">{
+ if initialCapacity &lt;= 0 </span><span class="cov0" title="0">{
+  initialCapacity = 1
+ }</span>
+ <span class="cov8" title="1">return &amp;Massive{
+  Data:     make([]string, initialCapacity),
+  Size:     0,
+  Capacity: initialCapacity,
+ }</span>
+}
+
+// expand
+func (m *Massive) expand() <span class="cov8" title="1">{
+ newCapacity := m.Capacity * 2
+ newData := make([]string, newCapacity)
+
+ for i := 0; i &lt; m.Size; i++ </span><span class="cov8" title="1">{
+  newData[i] = m.Data[i]
+ }</span>
+
+ <span class="cov8" title="1">m.Data = newData
+ m.Capacity = newCapacity</span>
+}
+
+// PushBack
+func (m *Massive) PushBack(val string) <span class="cov8" title="1">{
+ if m.Size == m.Capacity </span><span class="cov8" title="1">{
+  m.expand()
+ }</span>
+ <span class="cov8" title="1">m.Data[m.Size] = val
+ m.Size++</span>
+}
+
+// Insert
+func (m *Massive) Insert(index int, val string) error <span class="cov8" title="1">{
+ if index &lt; 0 || index &gt; m.Size </span><span class="cov8" title="1">{
+  return errors.New("bounds error")
+ }</span>
+
+ <span class="cov8" title="1">if m.Size == m.Capacity </span><span class="cov8" title="1">{
+  m.expand()
+ }</span>
+
+ <span class="cov8" title="1">for i := m.Size; i &gt; index; i-- </span><span class="cov8" title="1">{
+  m.Data[i] = m.Data[i-1]
+ }</span>
+
+ <span class="cov8" title="1">m.Data[index] = val
+ m.Size++
+ return nil</span>
+}
+
+// Remove
+func (m *Massive) Remove(index int) error <span class="cov8" title="1">{
+ if index &lt; 0 || index &gt;= m.Size </span><span class="cov8" title="1">{
+  return errors.New("bounds error")
+ }</span>
+
+ <span class="cov8" title="1">for i := index; i &lt; m.Size-1; i++ </span><span class="cov8" title="1">{
+  m.Data[i] = m.Data[i+1]
+ }</span>
+
+ <span class="cov8" title="1">m.Data[m.Size-1] = ""
+ m.Size--
+ return nil</span>
+}
+
+// Get
+func (m *Massive) Get(index int) (string, error) <span class="cov8" title="1">{
+ if index &lt; 0 || index &gt;= m.Size </span><span class="cov8" title="1">{
+  return "", errors.New("bounds error")
+ }</span>
+ <span class="cov8" title="1">return m.Data[index], nil</span>
+}
+
+// Set
+func (m *Massive) Set(index int, val string) error <span class="cov8" title="1">{
+ if index &lt; 0 || index &gt;= m.Size </span><span class="cov8" title="1">{
+  return errors.New("bounds error")
+ }</span>
+ <span class="cov8" title="1">m.Data[index] = val
+ return nil</span>
+}
+
+// Print
+func (m *Massive) Print() <span class="cov8" title="1">{
+ fmt.Print("Arr: ")
+ for i := 0; i &lt; m.Size; i++ </span><span class="cov8" title="1">{
+  fmt.Print(m.Data[i], " ")
+ }</span>
+ <span class="cov8" title="1">fmt.Println()</span>
+}
+
+// Save
+func (m *Massive) Save(filename string) error <span class="cov8" title="1">{
+ file, err := os.Create(filename)
+ if err != nil </span><span class="cov0" title="0">{
+  return err
+ }</span>
+ <span class="cov8" title="1">defer file.Close()
+ 
+ encoder := json.NewEncoder(file)
+ encoder.SetIndent("", "  ")
+ return encoder.Encode(m)</span>
+}
+
+// Load
+func (m *Massive) Load(filename string) error <span class="cov8" title="1">{
+ file, err := os.Open(filename)
+ if err != nil </span><span class="cov8" title="1">{
+  return err
+ }</span>
+ <span class="cov8" title="1">defer file.Close()
+
+ decoder := json.NewDecoder(file)
+ return decoder.Decode(m)</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package structs
+
+import (
+        "encoding/json"
+        "fmt"
+        "os"
+)
+
+type DList struct {
+        Items []string `json:"items"` //храним как слайс для удобной JSON-сериализации
+//Поля head и tail не экспортируем в JSON напрямую, восстановим их при Load
+        head *DNode
+        tail *DNode
+}
+
+// Узел двусвязного
+type DNode struct {
+        Val  string //значение
+        Next *DNode //след
+        Prev *DNode //пред
+}
+
+// Конструктор
+func NewDList() *DList <span class="cov8" title="1">{
+        return &amp;DList{Items: make([]string, 0)} //инициализация
+}</span>
+
+// Добавить в голову
+func (l *DList) AddHead(val string) <span class="cov8" title="1">{
+        // Обновляем слайс для JSON
+        l.Items = append([]string{val}, l.Items...)
+
+        n := &amp;DNode{Val: val} //новый узел
+        if l.head == nil </span><span class="cov8" title="1">{ //если пуст
+                l.head = n
+                l.tail = n
+        }</span> else<span class="cov0" title="0"> {
+                n.Next = l.head //связь вперед
+                l.head.Prev = n //связь назад
+                l.head = n //новая голова
+        }</span>
+}
+
+// Добавить в хвост
+func (l *DList) AddTail(val string) <span class="cov8" title="1">{
+        // Обновляем слайс для JSON
+        l.Items = append(l.Items, val)
+
+        n := &amp;DNode{Val: val} //новый узел
+        if l.tail == nil </span><span class="cov8" title="1">{ //если пуст
+                l.head = n
+                l.tail = n
+        }</span> else<span class="cov8" title="1"> {
+                l.tail.Next = n //связь вперед
+                n.Prev = l.tail //связь назад
+                l.tail = n //новый хвост
+        }</span>
+}
+
+// Удалить по значению
+func (l *DList) DelVal(val string) <span class="cov8" title="1">{
+        // 1. Удаляем из связного списка
+        curr := l.head //итератор
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.Val == val </span><span class="cov8" title="1">{ //нашли
+                        if curr.Prev != nil </span><span class="cov8" title="1">{
+                                curr.Prev.Next = curr.Next //обход слева
+                        }</span> else<span class="cov8" title="1"> {
+                                l.head = curr.Next //новая голова
+                        }</span>
+
+                        <span class="cov8" title="1">if curr.Next != nil </span><span class="cov8" title="1">{
+                                curr.Next.Prev = curr.Prev //обход справа
+                        }</span> else<span class="cov8" title="1"> {
+                                l.tail = curr.Prev //новый хвост
+                        }</span>
+                        <span class="cov8" title="1">break</span> // Удаляем первое вхождение
+                }
+                <span class="cov8" title="1">curr = curr.Next</span> //дальше
+        }
+
+        // 2. Удаляем из слайса (для JSON)
+        <span class="cov8" title="1">for i, v := range l.Items </span><span class="cov8" title="1">{
+                if v == val </span><span class="cov8" title="1">{
+                        l.Items = append(l.Items[:i], l.Items[i+1:]...) //вырезаем
+                        break</span>
+                }
+        }
+}
+
+// Поиск значения
+func (l *DList) Find(val string) bool <span class="cov8" title="1">{
+        curr := l.head //итератор
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.Val == val </span><span class="cov8" title="1">{
+                        return true //нашли
+                }</span>
+                <span class="cov8" title="1">curr = curr.Next</span>
+        }
+        <span class="cov8" title="1">return false</span> //не нашли
+}
+
+// Печать
+func (l *DList) Print() <span class="cov8" title="1">{
+        fmt.Print("DList: ")
+        curr := l.head
+        for curr != nil </span><span class="cov0" title="0">{
+                fmt.Printf("%s &lt;-&gt; ", curr.Val)
+                curr = curr.Next
+        }</span>
+        <span class="cov8" title="1">fmt.Println("nil")</span>
+}
+
+// Load загружает из JSON и восстанавливает связи
+func (l *DList) Load(filename string) error <span class="cov8" title="1">{
+        file, err := os.Open(filename)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+
+        if err := json.NewDecoder(file).Decode(l); err != nil </span><span class="cov0" title="0">{ //читаем слайс
+                return err
+        }</span>
+
+        // Пересобираем связный список из загруженного слайса Items
+        <span class="cov8" title="1">l.head = nil
+        l.tail = nil
+        tempItems := l.Items
+        l.Items = make([]string, 0) // сброс, AddTail заполнит заново и корректно
+        for _, v := range tempItems </span><span class="cov8" title="1">{
+                l.AddTail(v) //восстанавливаем структуру
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+// Сохранение
+func (l *DList) Save(filename string) error <span class="cov8" title="1">{
+        file, err := os.Create(filename)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewEncoder(file).Encode(l)</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package structs
+
+import (
+        "encoding/json"
+        "fmt"
+        "os"
+)
+
+// Узел хеш-таблицы (для цепочек)
+type HashNode struct {
+        Key   string    `json:"key"`//ключ
+        Value string    `json:"value"`//значение
+        Next  *HashNode `json:"next"`//след в цепочке
+}
+
+// Хеш-таблица
+type HashTable struct {
+        Buckets  []*HashNode `json:"buckets"`//массив списков
+        Capacity int         `json:"capacity"`//емкость
+}
+
+// Конструктор
+func NewHashTable(cap int) *HashTable <span class="cov8" title="1">{
+        return &amp;HashTable{
+                Buckets:  make([]*HashNode, cap), //выделяем память
+                Capacity: cap,
+        }
+}</span>
+
+// Хеш-функция
+func (h *HashTable) hash(key string) int <span class="cov8" title="1">{
+        sum := 0
+        for _, c := range key </span><span class="cov8" title="1">{
+                sum += int(c) //суммируем коды символов
+        }</span>
+        <span class="cov8" title="1">return sum % h.Capacity</span> //берем остаток от деления
+}
+
+// Вставка
+func (h *HashTable) Put(key, val string) <span class="cov8" title="1">{
+        idx := h.hash(key) //индекс корзины
+        curr := h.Buckets[idx] //голова списка
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.Key == key </span><span class="cov8" title="1">{ //если ключ уже есть
+                        curr.Value = val //обновляем
+                        return
+                }</span>
+                <span class="cov8" title="1">curr = curr.Next</span> //дальше
+        }
+        //если нет, добавляем в начало цепочки
+        <span class="cov8" title="1">h.Buckets[idx] = &amp;HashNode{Key: key, Value: val, Next: h.Buckets[idx]}</span>
+}
+
+// Получение значения
+func (h *HashTable) Get(key string) string <span class="cov8" title="1">{
+        idx := h.hash(key) //индекс
+        curr := h.Buckets[idx] //голова
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.Key == key </span><span class="cov8" title="1">{
+                        return curr.Value //нашли
+                }</span>
+                <span class="cov8" title="1">curr = curr.Next</span> //дальше
+        }
+        <span class="cov8" title="1">return ""</span> //не нашли
+}
+
+// Удаление
+func (h *HashTable) Remove(key string) <span class="cov8" title="1">{
+        idx := h.hash(key) //индекс
+        curr := h.Buckets[idx] //голова
+        var prev *HashNode //предыдущий
+
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.Key == key </span><span class="cov8" title="1">{ //нашли
+                        if prev == nil </span><span class="cov0" title="0">{
+                                h.Buckets[idx] = curr.Next //удаляем голову цепочки
+                        }</span> else<span class="cov8" title="1"> {
+                                prev.Next = curr.Next //связываем пред и след
+                        }</span>
+                        <span class="cov8" title="1">return</span>
+                }
+                <span class="cov8" title="1">prev = curr //шаг
+                curr = curr.Next</span> //шаг
+        }
+}
+
+// Печать
+func (h *HashTable) Print() <span class="cov8" title="1">{
+        for i, b := range h.Buckets </span><span class="cov8" title="1">{
+                fmt.Printf("[%d]: ", i)
+                for b != nil </span><span class="cov8" title="1">{ //проход по цепочке
+                        fmt.Printf("{%s:%s} -&gt; ", b.Key, b.Value)
+                        b = b.Next
+                }</span>
+                <span class="cov8" title="1">fmt.Println("nil")</span>
+        }
+}
+
+// Сохранение
+func (h *HashTable) Save(filename string) error <span class="cov8" title="1">{
+        file, err := os.Create(filename)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewEncoder(file).Encode(h)</span>
+}
+
+// Загрузка
+func (h *HashTable) Load(filename string) error <span class="cov8" title="1">{
+        file, err := os.Open(filename)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewDecoder(file).Decode(h)</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package structs
+
+import (
+        "encoding/json"
+        "fmt"
+        "os"
+)
+
+// Структура очереди
+type Queue struct {
+        Data []string `json:"data"` //храним как массив для простоты
+}
+
+// Конструктор
+func NewQueue() *Queue <span class="cov8" title="1">{ return &amp;Queue{Data: make([]string, 0)} }</span>
+
+// Добавить элемент
+func (q *Queue) Push(val string) <span class="cov8" title="1">{
+        q.Data = append(q.Data, val) //в конец слайса
+}</span>
+
+// Извлечь элемент
+func (q *Queue) Pop() string <span class="cov8" title="1">{
+        if len(q.Data) == 0 </span><span class="cov8" title="1">{ return "" }</span> //пусто
+        <span class="cov8" title="1">val := q.Data[0] //берем первый
+        q.Data = q.Data[1:] //отрезаем голову слайса
+        return val</span>
+}
+
+// Печать
+func (q *Queue) Print() <span class="cov8" title="1">{
+        fmt.Println("Queue:", q.Data)
+}</span>
+
+// Сохранение
+func (q *Queue) Save(filename string) error <span class="cov8" title="1">{
+        file, err := os.Create(filename)
+        if err != nil </span><span class="cov0" title="0">{ return err }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewEncoder(file).Encode(q)</span>
+}
+
+// Загрузка
+func (q *Queue) Load(filename string) error <span class="cov8" title="1">{
+        file, err := os.Open(filename)
+        if err != nil </span><span class="cov8" title="1">{ return err }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewDecoder(file).Decode(q)</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package structs
+
+import (
+ "encoding/json"
+ "fmt"
+ "os"
+)
+
+// SNode
+type SNode struct {
+ Val  string
+ Next *SNode
+}
+
+// SinglyLinkedList
+type SinglyLinkedList struct {
+ Head *SNode
+}
+
+// PushHead
+func (l *SinglyLinkedList) PushHead(val string) <span class="cov8" title="1">{
+ newNode := &amp;SNode{Val: val, Next: l.Head}
+ l.Head = newNode
+}</span>
+
+// PushTail
+func (l *SinglyLinkedList) PushTail(val string) <span class="cov8" title="1">{
+ newNode := &amp;SNode{Val: val, Next: nil}
+ if l.Head == nil </span><span class="cov8" title="1">{
+  l.Head = newNode
+  return
+ }</span>
+ <span class="cov8" title="1">curr := l.Head
+ for curr.Next != nil </span><span class="cov8" title="1">{
+  curr = curr.Next
+ }</span>
+ <span class="cov8" title="1">curr.Next = newNode</span>
+}
+
+// InsertAfter
+func (l *SinglyLinkedList) InsertAfter(target string, val string) <span class="cov8" title="1">{
+ curr := l.Head
+ for curr != nil &amp;&amp; curr.Val != target </span><span class="cov0" title="0">{
+  curr = curr.Next
+ }</span>
+ <span class="cov8" title="1">if curr != nil </span><span class="cov8" title="1">{
+  newNode := &amp;SNode{Val: val, Next: curr.Next}
+  curr.Next = newNode
+ }</span>
+}
+
+// InsertBefore
+func (l *SinglyLinkedList) InsertBefore(target string, val string) <span class="cov8" title="1">{
+ if l.Head == nil </span><span class="cov8" title="1">{ return }</span>
+ 
+ <span class="cov8" title="1">if l.Head.Val == target </span><span class="cov8" title="1">{
+  l.PushHead(val)
+  return
+ }</span>
+ 
+ <span class="cov8" title="1">curr := l.Head
+ for curr.Next != nil &amp;&amp; curr.Next.Val != target </span><span class="cov8" title="1">{
+  curr = curr.Next
+ }</span>
+ 
+ <span class="cov8" title="1">if curr.Next != nil </span><span class="cov8" title="1">{
+  newNode := &amp;SNode{Val: val, Next: curr.Next}
+  curr.Next = newNode
+ }</span>
+}
+
+// DeleteHead
+func (l *SinglyLinkedList) DeleteHead() <span class="cov8" title="1">{
+ if l.Head != nil </span><span class="cov0" title="0">{
+  l.Head = l.Head.Next
+ }</span>
+}
+
+// DeleteTail
+func (l *SinglyLinkedList) DeleteTail() <span class="cov8" title="1">{
+ if l.Head == nil </span><span class="cov8" title="1">{ return }</span>
+ <span class="cov8" title="1">if l.Head.Next == nil </span><span class="cov0" title="0">{
+  l.Head = nil
+  return
+ }</span>
+ <span class="cov8" title="1">curr := l.Head
+ for curr.Next.Next != nil </span><span class="cov8" title="1">{
+  curr = curr.Next
+ }</span>
+ <span class="cov8" title="1">curr.Next = nil</span>
+}
+
+// DeleteByValue
+func (l *SinglyLinkedList) DeleteByValue(val string) <span class="cov8" title="1">{
+ if l.Head == nil </span><span class="cov8" title="1">{ return }</span>
+ <span class="cov8" title="1">if l.Head.Val == val </span><span class="cov0" title="0">{
+  l.DeleteHead()
+  return
+ }</span>
+ <span class="cov8" title="1">curr := l.Head
+ for curr.Next != nil &amp;&amp; curr.Next.Val != val </span><span class="cov0" title="0">{
+  curr = curr.Next
+ }</span>
+ <span class="cov8" title="1">if curr.Next != nil </span><span class="cov8" title="1">{
+  curr.Next = curr.Next.Next
+ }</span>
+}
+
+// DeleteAfter
+func (l *SinglyLinkedList) DeleteAfter(target string) <span class="cov8" title="1">{
+ curr := l.Head
+ for curr != nil &amp;&amp; curr.Val != target </span><span class="cov0" title="0">{
+  curr = curr.Next
+ }</span>
+ <span class="cov8" title="1">if curr != nil &amp;&amp; curr.Next != nil </span><span class="cov8" title="1">{
+  curr.Next = curr.Next.Next
+ }</span>
+}
+
+// DeleteBefore
+func (l *SinglyLinkedList) DeleteBefore(target string) <span class="cov8" title="1">{
+ if l.Head == nil || l.Head.Next == nil </span><span class="cov8" title="1">{ return }</span>
+ 
+ <span class="cov8" title="1">if l.Head.Next.Val == target </span><span class="cov0" title="0">{
+  l.DeleteHead()
+  return
+ }</span>
+ 
+ <span class="cov8" title="1">curr := l.Head
+ for curr.Next.Next != nil &amp;&amp; curr.Next.Next.Val != target </span><span class="cov8" title="1">{
+  curr = curr.Next
+ }</span>
+ 
+ <span class="cov8" title="1">if curr.Next.Next != nil </span><span class="cov8" title="1">{
+  curr.Next = curr.Next.Next
+ }</span>
+}
+
+// Find
+func (l *SinglyLinkedList) Find(val string) bool <span class="cov8" title="1">{
+ curr := l.Head
+ for curr != nil </span><span class="cov8" title="1">{
+  if curr.Val == val </span><span class="cov8" title="1">{ return true }</span>
+  <span class="cov8" title="1">curr = curr.Next</span>
+ }
+ <span class="cov8" title="1">return false</span>
+}
+
+// Print
+func (l *SinglyLinkedList) Print() <span class="cov8" title="1">{
+ fmt.Print("SList: ")
+ curr := l.Head
+ for curr != nil </span><span class="cov8" title="1">{
+  fmt.Print(curr.Val, " -&gt; ")
+  curr = curr.Next
+ }</span>
+ <span class="cov8" title="1">fmt.Println("NULL")</span>
+}
+
+// Save
+func (l *SinglyLinkedList) Save(filename string) error <span class="cov8" title="1">{
+ file, err := os.Create(filename)
+ if err != nil </span><span class="cov0" title="0">{ return err }</span>
+ <span class="cov8" title="1">defer file.Close()
+ 
+ var data []string
+ curr := l.Head
+ for curr != nil </span><span class="cov8" title="1">{
+  data = append(data, curr.Val)
+  curr = curr.Next
+ }</span>
+ 
+ <span class="cov8" title="1">encoder := json.NewEncoder(file)
+ encoder.SetIndent("", "  ")
+ return encoder.Encode(data)</span>
+}
+
+// Load
+func (l *SinglyLinkedList) Load(filename string) error <span class="cov8" title="1">{
+ file, err := os.Open(filename)
+ if err != nil </span><span class="cov8" title="1">{ return err }</span>
+ <span class="cov8" title="1">defer file.Close()
+ 
+ var data []string
+ decoder := json.NewDecoder(file)
+ if err := decoder.Decode(&amp;data); err != nil </span><span class="cov0" title="0">{ return err }</span>
+ 
+ <span class="cov8" title="1">l.Head = nil
+ for _, v := range data </span><span class="cov8" title="1">{
+  l.PushTail(v)
+ }</span>
+ <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package structs
+
+import (
+        "encoding/json"
+        "fmt"
+        "os"
+)
+
+// Структура стека
+type Stack struct {
+        Data []string `json:"data"` //храним данные
+}
+
+// Конструктор
+func NewStack() *Stack <span class="cov8" title="1">{ return &amp;Stack{Data: make([]string, 0)} }</span>
+
+// Добавить наверх
+func (s *Stack) Push(val string) <span class="cov8" title="1">{
+        s.Data = append(s.Data, val) //в конец слайса
+}</span>
+
+// Снять сверху
+func (s *Stack) Pop() string <span class="cov8" title="1">{
+        if len(s.Data) == 0 </span><span class="cov8" title="1">{ return "" }</span> //пусто
+        <span class="cov8" title="1">lastIdx := len(s.Data) - 1 //индекс последнего
+        val := s.Data[lastIdx] //берем значение
+        s.Data = s.Data[:lastIdx] //уменьшаем слайс
+        return val</span>
+}
+
+// Печать
+func (s *Stack) Print() <span class="cov8" title="1">{
+        fmt.Print("Stack (Top-&gt;Bottom): ")
+        for i := len(s.Data)-1; i &gt;= 0; i-- </span><span class="cov0" title="0">{ //идем с конца
+                fmt.Printf("[%s] ", s.Data[i])
+        }</span>
+        <span class="cov8" title="1">fmt.Println()</span>
+}
+
+// Сохранение
+func (s *Stack) Save(filename string) error <span class="cov8" title="1">{
+        file, err := os.Create(filename)
+        if err != nil </span><span class="cov0" title="0">{ return err }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewEncoder(file).Encode(s)</span>
+}
+
+// Загрузка
+func (s *Stack) Load(filename string) error <span class="cov8" title="1">{
+        file, err := os.Open(filename)
+        if err != nil </span><span class="cov8" title="1">{ return err }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewDecoder(file).Decode(s)</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package structs
+
+import (
+        "encoding/json"
+        "fmt"
+        "os"
+)
+
+const (
+        RED   = true
+        BLACK = false
+)
+
+// RBNode - узел дерева
+type RBNode struct {
+        Key    int     `json:"key"`//ключ
+        Color  bool    `json:"color"`// true=RED, false=BLACK
+        Left   *RBNode `json:"left"`//левый сын
+        Right  *RBNode `json:"right"`//правый сын
+        Parent *RBNode `json:"-"`// Исключаем из JSON, чтобы не было циклов
+}
+
+// RBTree - обертка дерева
+type RBTree struct {
+        Root  *RBNode `json:"root"`//корень
+        TNULL *RBNode `json:"-"`// Служебный узел (заглушка)
+}
+
+// NewRBTree - конструктор
+func NewRBTree() *RBTree <span class="cov8" title="1">{
+        tnull := &amp;RBNode{Color: BLACK} //заглушка всегда черная
+        // Важно: TNULL должен быть отдельным объектом
+        return &amp;RBTree{
+                TNULL: tnull,
+                Root:  tnull,
+        }
+}</span>
+
+//Вспомогательные функции (Приватные)
+
+// Левый поворот
+func (t *RBTree) leftRotate(x *RBNode) <span class="cov8" title="1">{
+        y := x.Right //правый сын
+        x.Right = y.Left //перекидываем левого сына Y к X
+        if y.Left != t.TNULL </span><span class="cov8" title="1">{
+                y.Left.Parent = x //обновляем родителя
+        }</span>
+        <span class="cov8" title="1">y.Parent = x.Parent //связываем Y с родителем X
+        if x.Parent == nil </span><span class="cov8" title="1">{
+                t.Root = y //если корень
+        }</span> else<span class="cov8" title="1"> if x == x.Parent.Left </span><span class="cov8" title="1">{
+                x.Parent.Left = y //слева
+        }</span> else<span class="cov8" title="1"> {
+                x.Parent.Right = y //справа
+        }</span>
+        <span class="cov8" title="1">y.Left = x //X становится левым сыном Y
+        x.Parent = y</span> //обновляем родителя X
+}
+
+// Правый поворот
+func (t *RBTree) rightRotate(x *RBNode) <span class="cov8" title="1">{
+        y := x.Left //левый сын
+        x.Left = y.Right //перекидываем
+        if y.Right != t.TNULL </span><span class="cov8" title="1">{
+                y.Right.Parent = x //обновляем родителя
+        }</span>
+        <span class="cov8" title="1">y.Parent = x.Parent //связываем с дедом
+        if x.Parent == nil </span><span class="cov8" title="1">{
+                t.Root = y //корень
+        }</span> else<span class="cov8" title="1"> if x == x.Parent.Right </span><span class="cov8" title="1">{
+                x.Parent.Right = y //справа
+        }</span> else<span class="cov8" title="1"> {
+                x.Parent.Left = y //слева
+        }</span>
+        <span class="cov8" title="1">y.Right = x //X становится правым сыном Y
+        x.Parent = y</span>
+}
+
+// Балансировка вставки
+func (t *RBTree) insertFix(k *RBNode) <span class="cov8" title="1">{
+        var u *RBNode //дядя
+        for k.Parent.Color == RED </span><span class="cov8" title="1">{ //пока папа красный
+                if k.Parent == k.Parent.Parent.Right </span><span class="cov8" title="1">{ //папа справа
+                        u = k.Parent.Parent.Left //дядя слева
+                        if u.Color == RED </span><span class="cov8" title="1">{ //случай 1: дядя красный
+                                u.Color = BLACK
+                                k.Parent.Color = BLACK
+                                k.Parent.Parent.Color = RED
+                                k = k.Parent.Parent //идем вверх
+                        }</span> else<span class="cov8" title="1"> {
+                                if k == k.Parent.Left </span><span class="cov8" title="1">{ //случай 2: зигзаг
+                                        k = k.Parent
+                                        t.rightRotate(k)
+                                }</span>
+                                //случай 3: линия
+                                <span class="cov8" title="1">k.Parent.Color = BLACK
+                                k.Parent.Parent.Color = RED
+                                t.leftRotate(k.Parent.Parent)</span>
+                        }
+                } else<span class="cov8" title="1"> { //зеркальная ситуация
+                        u = k.Parent.Parent.Right //дядя справа
+                        if u.Color == RED </span><span class="cov8" title="1">{ //случай 1
+                                u.Color = BLACK
+                                k.Parent.Color = BLACK
+                                k.Parent.Parent.Color = RED
+                                k = k.Parent.Parent
+                        }</span> else<span class="cov8" title="1"> {
+                                if k == k.Parent.Right </span><span class="cov8" title="1">{ //случай 2
+                                        k = k.Parent
+                                        t.leftRotate(k)
+                                }</span>
+                                //случай 3
+                                <span class="cov8" title="1">k.Parent.Color = BLACK
+                                k.Parent.Parent.Color = RED
+                                t.rightRotate(k.Parent.Parent)</span>
+                        }
+                }
+                <span class="cov8" title="1">if k == t.Root </span><span class="cov8" title="1">{ break</span> } //дошли до корня
+        }
+        <span class="cov8" title="1">t.Root.Color = BLACK</span> //корень всегда черный
+}
+
+// Перенос поддерева
+func (t *RBTree) transplant(u, v *RBNode) <span class="cov8" title="1">{
+        if u.Parent == nil </span><span class="cov8" title="1">{
+                t.Root = v //корень
+        }</span> else<span class="cov8" title="1"> if u == u.Parent.Left </span><span class="cov8" title="1">{
+                u.Parent.Left = v //слева
+        }</span> else<span class="cov8" title="1"> {
+                u.Parent.Right = v //справа
+        }</span>
+        <span class="cov8" title="1">v.Parent = u.Parent</span> //обновляем родителя
+}
+
+// Минимум в поддереве
+func (t *RBTree) minimum(node *RBNode) *RBNode <span class="cov8" title="1">{
+        for node.Left != t.TNULL </span><span class="cov8" title="1">{
+                node = node.Left //идем влево до упора
+        }</span>
+        <span class="cov8" title="1">return node</span>
+}
+
+// Балансировка удаления
+func (t *RBTree) deleteFix(x *RBNode) <span class="cov8" title="1">{
+        var s *RBNode //брат
+        for x != t.Root &amp;&amp; x.Color == BLACK </span><span class="cov8" title="1">{ //пока x черный и не корень
+                if x == x.Parent.Left </span><span class="cov8" title="1">{ //мы слева
+                        s = x.Parent.Right //брат справа
+                        if s.Color == RED </span><span class="cov8" title="1">{ //случай 1
+                                s.Color = BLACK
+                                x.Parent.Color = RED
+                                t.leftRotate(x.Parent)
+                                s = x.Parent.Right
+                        }</span>
+                        <span class="cov8" title="1">if s.Left.Color == BLACK &amp;&amp; s.Right.Color == BLACK </span><span class="cov8" title="1">{ //случай 2
+                                s.Color = RED
+                                x = x.Parent
+                        }</span> else<span class="cov8" title="1"> {
+                                if s.Right.Color == BLACK </span><span class="cov8" title="1">{ //случай 3
+                                        s.Left.Color = BLACK
+                                        s.Color = RED
+                                        t.rightRotate(s)
+                                        s = x.Parent.Right
+                                }</span>
+                                <span class="cov8" title="1">s.Color = x.Parent.Color //случай 4
+                                x.Parent.Color = BLACK
+                                s.Right.Color = BLACK
+                                t.leftRotate(x.Parent)
+                                x = t.Root</span>
+                        }
+                } else<span class="cov8" title="1"> { //зеркально
+                        s = x.Parent.Left
+                        if s.Color == RED </span><span class="cov8" title="1">{
+                                s.Color = BLACK
+                                x.Parent.Color = RED
+                                t.rightRotate(x.Parent)
+                                s = x.Parent.Left
+                        }</span>
+                        <span class="cov8" title="1">if s.Right.Color == BLACK &amp;&amp; s.Left.Color == BLACK </span><span class="cov8" title="1">{
+                                s.Color = RED
+                                x = x.Parent
+                        }</span> else<span class="cov8" title="1"> {
+                                if s.Left.Color == BLACK </span><span class="cov8" title="1">{
+                                        s.Right.Color = BLACK
+                                        s.Color = RED
+                                        t.leftRotate(s)
+                                        s = x.Parent.Left
+                                }</span>
+                                <span class="cov8" title="1">s.Color = x.Parent.Color
+                                x.Parent.Color = BLACK
+                                s.Left.Color = BLACK
+                                t.rightRotate(x.Parent)
+                                x = t.Root</span>
+                        }
+                }
+        }
+        <span class="cov8" title="1">x.Color = BLACK</span> //x стал черным
+}
+
+// Вспомогательный поиск
+func (t *RBTree) searchHelper(node *RBNode, key int) *RBNode <span class="cov8" title="1">{
+        if node == t.TNULL || key == node.Key </span><span class="cov8" title="1">{
+                return node //нашли или тупик
+        }</span>
+        <span class="cov8" title="1">if key &lt; node.Key </span><span class="cov8" title="1">{
+                return t.searchHelper(node.Left, key) //влево
+        }</span>
+        <span class="cov8" title="1">return t.searchHelper(node.Right, key)</span> //вправо
+}
+
+//Публичные методы
+
+// Insert - вставка ключа
+func (t *RBTree) Insert(key int) <span class="cov8" title="1">{
+        node := &amp;RBNode{Key: key, Color: RED, Left: t.TNULL, Right: t.TNULL, Parent: nil} //новый красный
+        y := (*RBNode)(nil)
+        x := t.Root
+
+        for x != t.TNULL </span><span class="cov8" title="1">{ //спуск вниз
+                y = x
+                if node.Key &lt; x.Key </span><span class="cov8" title="1">{
+                        x = x.Left
+                }</span> else<span class="cov8" title="1"> {
+                        x = x.Right
+                }</span>
+        }
+
+        <span class="cov8" title="1">node.Parent = y //ставим родителя
+        if y == nil </span><span class="cov8" title="1">{
+                t.Root = node //корень
+        }</span> else<span class="cov8" title="1"> if node.Key &lt; y.Key </span><span class="cov8" title="1">{
+                y.Left = node //левый сын
+        }</span> else<span class="cov8" title="1"> {
+                y.Right = node //правый сын
+        }</span>
+
+        <span class="cov8" title="1">if node.Parent == nil </span><span class="cov8" title="1">{
+                node.Color = BLACK //корень черный
+                return
+        }</span>
+        <span class="cov8" title="1">if node.Parent.Parent == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">t.insertFix(node)</span> //балансировка
+}
+
+//удаление ключа
+func (t *RBTree) Delete(key int) <span class="cov8" title="1">{
+        z := t.searchHelper(t.Root, key) //ищем узел
+        if z == t.TNULL </span><span class="cov8" title="1">{
+                fmt.Println("Key not found")
+                return
+        }</span>
+
+        <span class="cov8" title="1">var x, y *RBNode
+        y = z
+        yOrigColor := y.Color
+
+        if z.Left == t.TNULL </span><span class="cov8" title="1">{
+                x = z.Right
+                t.transplant(z, z.Right) //замена правым
+        }</span> else<span class="cov8" title="1"> if z.Right == t.TNULL </span><span class="cov8" title="1">{
+                x = z.Left
+                t.transplant(z, z.Left) //замена левым
+        }</span> else<span class="cov8" title="1"> {
+                y = t.minimum(z.Right) //ищем преемника
+                yOrigColor = y.Color
+                x = y.Right
+                if y.Parent == z </span><span class="cov8" title="1">{
+                        x.Parent = y
+                }</span> else<span class="cov8" title="1"> {
+                        t.transplant(y, y.Right)
+                        y.Right = z.Right
+                        y.Right.Parent = y
+                }</span>
+                <span class="cov8" title="1">t.transplant(z, y)
+                y.Left = z.Left
+                y.Left.Parent = y
+                y.Color = z.Color</span>
+        }
+        <span class="cov8" title="1">if yOrigColor == BLACK </span><span class="cov8" title="1">{
+                t.deleteFix(x) //балансировка если удалили черный
+        }</span>
+}
+
+// Search - поиск ключа
+func (t *RBTree) Search(k int) bool <span class="cov8" title="1">{
+        return t.searchHelper(t.Root, k) != t.TNULL
+}</span>
+
+// Вспомогательная печать
+func (t *RBTree) printHelper(root *RBNode, indent string, last bool) <span class="cov8" title="1">{
+        if root != t.TNULL </span><span class="cov8" title="1">{
+                fmt.Print(indent)
+                if last </span><span class="cov8" title="1">{
+                        fmt.Print("R----") //правый
+                        indent += "   "
+                }</span> else<span class="cov8" title="1"> {
+                        fmt.Print("L----") //левый
+                        indent += "|  "
+                }</span>
+                <span class="cov8" title="1">color := "BLK"
+                if root.Color == RED </span><span class="cov8" title="1">{
+                        color = "RED"
+                }</span>
+                <span class="cov8" title="1">fmt.Printf("%d(%s)\n", root.Key, color)
+                t.printHelper(root.Left, indent, false) //рек лево
+                t.printHelper(root.Right, indent, true)</span> //рек право
+        }
+}
+
+// Print - красивый вывод дерева
+func (t *RBTree) Print() <span class="cov8" title="1">{
+        if t.Root == t.TNULL </span><span class="cov0" title="0">{
+                fmt.Println("Tree is empty")
+        }</span> else<span class="cov8" title="1"> {
+                t.printHelper(t.Root, "", true)
+        }</span>
+}
+
+//Сериализация
+
+// Save - сохранение в JSON
+func (t *RBTree) Save(filename string) error <span class="cov8" title="1">{
+        file, err := os.Create(filename) //файл
+        if err != nil </span><span class="cov0" title="0">{ return err }</span>
+        <span class="cov8" title="1">defer file.Close()
+        return json.NewEncoder(file).Encode(t)</span> //пишем
+}
+
+// Load - загрузка из JSON
+func (t *RBTree) Load(filename string) error <span class="cov8" title="1">{
+        file, err := os.Open(filename) //открываем
+        if err != nil </span><span class="cov8" title="1">{ return err }</span>
+        <span class="cov8" title="1">defer file.Close()
+
+        // Сначала загружаем "сырую" структуру
+        if err := json.NewDecoder(file).Decode(t); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+//После загрузки из JSON поле Parent потеряно (мы его не сохраняли, чтобы не было циклов),и TNULL не настроен.
+        <span class="cov8" title="1">t.TNULL = &amp;RBNode{Color: BLACK}//Новый TNULL
+        t.fixParentsAndTNULL(t.Root)//Рекурсивно чиним
+        return nil</span>
+}
+
+//восстанавливает связи Parent и заменяет nil на TNULL
+func (t *RBTree) fixParentsAndTNULL(node *RBNode) <span class="cov8" title="1">{
+        if node == nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+        // Если узел был сохранен как лист (nil в json), делаем его TNULL
+        <span class="cov8" title="1">if node.Left == nil </span><span class="cov8" title="1">{
+                node.Left = t.TNULL
+        }</span> else<span class="cov8" title="1"> {
+                node.Left.Parent = node
+                t.fixParentsAndTNULL(node.Left)
+        }</span>
+
+        <span class="cov8" title="1">if node.Right == nil </span><span class="cov8" title="1">{
+                node.Right = t.TNULL
+        }</span> else<span class="cov8" title="1"> {
+                node.Right.Parent = node
+                t.fixParentsAndTNULL(node.Right)
+        }</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
